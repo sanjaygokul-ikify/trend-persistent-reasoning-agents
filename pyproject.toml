@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "persistent-reasoning-agents"
+version = "0.1.0"
+description = "Distributed AI agents with persistent reasoning memory"
+authors = [{name="Architect Team", email="arch@company.ai"}]
+dependencies = ["pydantic","fastapi","httpx","graphlib>=0.4.4"]
+requires-python = ">=3.9"
+
+[project.optional-dependencies]
+develop = ["bandit","pylint","pytest"]
+
+[tool.setuptools]
+packages = find:
+
+[tool.black]
+skip-magic-comments = true
