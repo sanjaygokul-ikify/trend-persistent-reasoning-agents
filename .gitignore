@@ -1,0 +1,1 @@
+/__pycache__\n.env\n*.log\n*.tmp\n*.sqlite3\n/docs/venv\n*.swp\n*.vscode-server\n*.egg-info\nwheelhouse\n*.egg\nbuild\n.venv\n/instance\n/venv\n/.mypy_cache\n/__pytests__
