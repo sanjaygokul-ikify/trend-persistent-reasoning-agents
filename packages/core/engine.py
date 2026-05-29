@@ -51,3 +51,6 @@ class Engine:
         if result:
             return result
         return {}
+
+    def get_task(self, task_id: str) -> Task:
+        return self.memory_store.get_task(task_id)
