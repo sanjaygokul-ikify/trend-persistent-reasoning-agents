@@ -24,6 +24,10 @@ class Engine:
                 # add error handling for task execution
                 task.status = "failed"
                 self.memory_store.update_task(task)
+            except Exception as e:
+                logger.error(f"Unexpected error executing task {task.id}: {e}")
+                task.status = "failed"
+                self.memory_store.update_task(task)
 
     def execute_task(self, task: Task):
         # Load cognitive frame from memory store
