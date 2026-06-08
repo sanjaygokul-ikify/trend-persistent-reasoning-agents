@@ -52,6 +52,11 @@ class Engine:
             task.status = "failed"
             self.memory_store.update_task(task)
 
+        # Add timeout handling
+        if task.status != 'completed':
+            task.status = 'timed_out'
+            self.memory_store.update_task(task)
+
     def get_task_status(self, task_id: str) -> str:
         task = self.memory_store.get_task(task_id)
         if task:
