@@ -21,7 +21,6 @@ class Engine:
                 self.execute_task(task)
             except EngineError as e:
                 logger.error(f"Error executing task {task.id}: {e}")
-                # add error handling for task execution
                 task.status = "failed"
                 self.memory_store.update_task(task)
             except Exception as e:
@@ -43,17 +42,15 @@ class Engine:
         try:
             result = agent.execute_task(task, cognitive_frame)
             self.memory_store.store_result(task.id, result)
-            # Update task status
             task.status = "completed"
             self.memory_store.update_task(task)
         except Exception as e:
-            # add error handling for agent execution
             logger.error(f"Error executing task {task.id}: {e}")
             task.status = "failed"
             self.memory_store.update_task(task)
 
         # Add timeout handling
-        if task.status != 'completed':
+        if task.status != 'completed' and task.status != 'failed':
             task.status = 'timed_out'
             self.memory_store.update_task(task)
 
