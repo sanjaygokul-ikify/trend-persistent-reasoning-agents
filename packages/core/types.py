@@ -26,3 +26,21 @@ class Task:
 class Result:
     id: str
     data: Dict
+
+@dataclasses.dataclass
+class TaskState:
+    status: str
+    error: str
+
+    def to_dict(self) -> Dict:
+        return {
+            'status': self.status,
+            'error': self.error
+        }
+
+    @staticmethod
+    def from_dict(task_state_dict: Dict) -> 'TaskState':
+        return TaskState(
+            status=task_state_dict['status'],
+            error=task_state_dict['error']
+        )
