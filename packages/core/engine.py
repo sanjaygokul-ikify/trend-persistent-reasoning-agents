@@ -68,3 +68,18 @@ class Engine:
 
     def get_task(self, task_id: str) -> Task:
         return self.memory_store.get_task(task_id)
+
+    # Added timeout handling for execute_task
+    def execute_task_with_timeout(self, task: Task, timeout: int):
+        import signal
+        def handler(signum, frame):
+            raise TimeoutError()
+        signal.signal(signal.SIGALRM, handler)
+        signal.alarm(timeout)
+        try:
+            self.execute_task(task)
+        except TimeoutError:
+            task.status = 'timed_out'
+            self.memory_store.update_task(task)
+        finally:
+            signal.alarm(0)
