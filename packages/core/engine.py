@@ -18,7 +18,7 @@ class Engine:
         while self.task_queue:
             task = self.task_queue.pop(0)
             try:
-                self.execute_task(task)
+                self.execute_task_with_timeout(task, 30)  # Added timeout handling
             except EngineError as e:
                 logger.error(f"Error executing task {task.id}: {e}")
                 task.status = "failed"
@@ -54,6 +54,20 @@ class Engine:
             task.status = 'timed_out'
             self.memory_store.update_task(task)
 
+    def execute_task_with_timeout(self, task: Task, timeout: int):
+        import signal
+        def handler(signum, frame):
+            raise TimeoutError()
+        signal.signal(signal.SIGALRM, handler)
+        signal.alarm(timeout)
+        try:
+            self.execute_task(task)
+        except TimeoutError:
+            task.status = 'timed_out'
+            self.memory_store.update_task(task)
+        finally:
+            signal.alarm(0)
+
     def get_task_status(self, task_id: str) -> str:
         task = self.memory_store.get_task(task_id)
         if task:
@@ -68,18 +82,3 @@ class Engine:
 
     def get_task(self, task_id: str) -> Task:
         return self.memory_store.get_task(task_id)
-
-    # Added timeout handling for execute_task
-    def execute_task_with_timeout(self, task: Task, timeout: int):
-        import signal
-        def handler(signum, frame):
-            raise TimeoutError()
-        signal.signal(signal.SIGALRM, handler)
-        signal.alarm(timeout)
-        try:
-            self.execute_task(task)
-        except TimeoutError:
-            task.status = 'timed_out'
-            self.memory_store.update_task(task)
-        finally:
-            signal.alarm(0)
